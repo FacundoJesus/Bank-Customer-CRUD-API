@@ -1,11 +1,8 @@
 package com.bank.app.crud_api.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
-@Entity(name="coustomers")
+@Entity(name="customers")
 public class Customer {
 
     @Id
@@ -14,7 +11,10 @@ public class Customer {
 
     private String firstName;
     private String lastName;
+
+    @Column(unique = true)
     private String email;
+
     private String phoneNumber;
 
     public Long getId() {
@@ -60,4 +60,5 @@ public class Customer {
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
+
 }

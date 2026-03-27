@@ -23,6 +23,9 @@ public class CustomerService implements iCustomerService {
 
     @Override
     public void createCustomer(Customer customer) {
+        if(repositoryCustomer.existsByEmail(customer.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists");
+        }
         repositoryCustomer.save(customer);
     }
 
