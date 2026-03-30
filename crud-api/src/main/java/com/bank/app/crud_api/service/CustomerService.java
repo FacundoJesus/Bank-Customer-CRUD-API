@@ -1,20 +1,19 @@
 package com.bank.app.crud_api.service;
 
 import com.bank.app.crud_api.models.Customer;
-import com.bank.app.crud_api.repositories.iRepositoryCustomer;
+import com.bank.app.crud_api.repositories.iCustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CustomerService implements iCustomerService {
 
     @Autowired
-    private iRepositoryCustomer repositoryCustomer;
+    private iCustomerRepository repositoryCustomer;
 
     @Override
     public List<Customer> getAllCustomers() {
@@ -40,6 +39,16 @@ public class CustomerService implements iCustomerService {
     @Override
     public Customer updateCustomer(Customer customer, Long customerId) {
 
+        return repositoryCustomer.findById(customerId)
+                .map(existing -> {
+                    existing.setFirstName(customer.getFirstName());
+                    existing.setLastName(customer.getLastName());
+                    existing.setEmail(customer.getEmail());
+                    existing.setPhoneNumber(customer.getPhoneNumber());
+                    return repositoryCustomer.save(existing);
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+        /*
         Customer savedCustomer = repositoryCustomer.findById(customerId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
 
@@ -49,6 +58,8 @@ public class CustomerService implements iCustomerService {
         savedCustomer.setPhoneNumber(customer.getPhoneNumber());
 
         return repositoryCustomer.save(savedCustomer);
+        */
+
     }
 
 
